@@ -15,10 +15,8 @@
 - [Requisitos](#requisitos)
 - [Instalação](#instalação)
 - [Uso](#uso)
-- [Diagrama UML](#diagrama-uml)
-- [Recursos](#recursos-crud)
+- [Recursos](#recursos)
 - [Licença](#licença)
-- [Contato](#contato)
 
 ## Descrição
 
@@ -148,3 +146,6 @@ A API `transito-api` oferece endpoints para realizar operações CRUD nas entida
   }
   ```
     - **Código de Erro:** 404 Not Found (se o proprietário não for encontrado).
+
+## Licença
+Este projeto está licenciado sob a Licença MIT.

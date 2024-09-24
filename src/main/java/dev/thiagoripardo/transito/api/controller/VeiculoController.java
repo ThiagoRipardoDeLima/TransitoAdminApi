@@ -1,5 +1,6 @@
 package dev.thiagoripardo.transito.api.controller;
 
+import dev.thiagoripardo.transito.api.model.VeiculoModel;
 import dev.thiagoripardo.transito.domain.exception.NegocioException;
 import dev.thiagoripardo.transito.domain.model.Veiculo;
 import dev.thiagoripardo.transito.domain.repository.VeiculoRepository;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping("/veiculos")
 public class VeiculoController {
 
-    private VeiculoRepository repository;
+    private final VeiculoRepository repository;
     private final RegistroVeiculoService service;
 
     @GetMapping
@@ -26,8 +27,20 @@ public class VeiculoController {
     }
 
     @GetMapping("/{veiculoId}")
-    public ResponseEntity<Veiculo> buscar(@PathVariable Long veiculoId){
+    public ResponseEntity<VeiculoModel> buscar(@PathVariable Long veiculoId){
         return repository.findById(veiculoId)
+                .map(veiculo -> {
+                    var veiculoModel = new VeiculoModel();
+                    veiculoModel.setId(veiculo.getId());
+                    veiculoModel.setNomeProprietario(veiculo.getProprietario().getNome());
+                    veiculoModel.setModelo(veiculo.getModelo());
+                    veiculoModel.setMarca(veiculo.getMarca());
+                    veiculoModel.setPlaca(veiculo.getPlaca());
+                    veiculoModel.setStatus(veiculo.getStatus());
+                    veiculoModel.setDataApreensao(veiculo.getDataApreensao());
+                    veiculoModel.setDataCadastro(veiculo.getDataCadastro());
+                    return veiculoModel;
+                })
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

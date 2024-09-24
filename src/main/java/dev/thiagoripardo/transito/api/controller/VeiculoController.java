@@ -7,6 +7,7 @@ import dev.thiagoripardo.transito.domain.repository.VeiculoRepository;
 import dev.thiagoripardo.transito.domain.service.RegistroVeiculoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class VeiculoController {
 
     private final VeiculoRepository repository;
     private final RegistroVeiculoService service;
+    private final ModelMapper modelMapper;
 
     @GetMapping
     public List<Veiculo> listar(){
@@ -29,18 +31,7 @@ public class VeiculoController {
     @GetMapping("/{veiculoId}")
     public ResponseEntity<VeiculoModel> buscar(@PathVariable Long veiculoId){
         return repository.findById(veiculoId)
-                .map(veiculo -> {
-                    var veiculoModel = new VeiculoModel();
-                    veiculoModel.setId(veiculo.getId());
-                    veiculoModel.setNomeProprietario(veiculo.getProprietario().getNome());
-                    veiculoModel.setModelo(veiculo.getModelo());
-                    veiculoModel.setMarca(veiculo.getMarca());
-                    veiculoModel.setPlaca(veiculo.getPlaca());
-                    veiculoModel.setStatus(veiculo.getStatus());
-                    veiculoModel.setDataApreensao(veiculo.getDataApreensao());
-                    veiculoModel.setDataCadastro(veiculo.getDataCadastro());
-                    return veiculoModel;
-                })
+                .map(veiculo -> modelMapper.map(veiculo, VeiculoModel.class))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

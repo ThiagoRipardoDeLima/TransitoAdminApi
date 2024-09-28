@@ -20,6 +20,11 @@ public class RegistroVeiculoService {
     private final VeiculoRepository rep;
     private final RegistroProprietarioService regProp;
 
+    public Veiculo buscar(Long id){
+        return rep.findById(id)
+                .orElseThrow(() -> new NegocioException("Veiculo não encontrado"));
+    }
+
     @Transactional
     public Veiculo cadastrar(Veiculo veiculo){
 

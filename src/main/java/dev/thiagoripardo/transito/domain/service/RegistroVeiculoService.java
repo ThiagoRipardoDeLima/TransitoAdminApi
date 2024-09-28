@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @AllArgsConstructor
@@ -20,8 +19,8 @@ public class RegistroVeiculoService {
     private final VeiculoRepository rep;
     private final RegistroProprietarioService regProp;
 
-    public Veiculo buscar(Long id){
-        return rep.findById(id)
+    public Veiculo buscar(Long veiculoId){
+        return rep.findById(veiculoId)
                 .orElseThrow(() -> new NegocioException("Veiculo não encontrado"));
     }
 

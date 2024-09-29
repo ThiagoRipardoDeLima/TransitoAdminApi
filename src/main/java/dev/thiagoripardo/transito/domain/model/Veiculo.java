@@ -1,6 +1,7 @@
 package dev.thiagoripardo.transito.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dev.thiagoripardo.transito.domain.exception.NegocioException;
 import dev.thiagoripardo.transito.domain.validation.ValidationGroups;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -70,6 +71,28 @@ public class Veiculo {
         autuacao.setVeiculo(this);
         getAutuacoes().add(autuacao);
         return autuacao;
+    }
+
+    public void apreender(){
+        if(veiculoApreendido()){
+            throw new NegocioException("Veículo já esta apreendido");
+        }
+
+        setStatus(StatusVeiculo.APREENDIDO);
+        setDataApreensao(OffsetDateTime.now());
+    }
+
+    private boolean veiculoApreendido(){
+        return StatusVeiculo.APREENDIDO.equals(getStatus());
+    }
+
+    public void removerApreensao(){
+        if(!veiculoApreendido()){
+            throw new NegocioException("Veículo não está apreendido");
+        }
+
+        setStatus(StatusVeiculo.REGULAR);
+        setDataApreensao(null);
     }
 
 }

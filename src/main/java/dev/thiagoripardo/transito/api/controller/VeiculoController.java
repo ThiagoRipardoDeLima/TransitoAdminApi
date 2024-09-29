@@ -3,13 +3,12 @@ package dev.thiagoripardo.transito.api.controller;
 import dev.thiagoripardo.transito.api.assembler.VeiculoAssembler;
 import dev.thiagoripardo.transito.api.model.VeiculoModel;
 import dev.thiagoripardo.transito.api.model.input.VeiculoInput;
-import dev.thiagoripardo.transito.domain.exception.NegocioException;
 import dev.thiagoripardo.transito.domain.model.Veiculo;
 import dev.thiagoripardo.transito.domain.repository.VeiculoRepository;
+import dev.thiagoripardo.transito.domain.service.ApreensaoVeiculoService;
 import dev.thiagoripardo.transito.domain.service.RegistroVeiculoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +20,10 @@ import java.util.List;
 @RequestMapping("/veiculos")
 public class VeiculoController {
 
-    private final VeiculoRepository repository;
-    private final RegistroVeiculoService service;
     private final VeiculoAssembler veiculoAssembler;
+    private final VeiculoRepository repository;
+    private final RegistroVeiculoService veiculoService;
+    private final ApreensaoVeiculoService apreensaoService;
 
     @GetMapping
     public List<VeiculoModel> listar(){
@@ -42,9 +42,20 @@ public class VeiculoController {
     @ResponseStatus(HttpStatus.CREATED)
     public VeiculoModel cadastrar(@Valid @RequestBody VeiculoInput veiculoInput){
         Veiculo veiculo = veiculoAssembler.toEntity(veiculoInput);
-        Veiculo veiculoCadastrado = service.cadastrar(veiculo);
+        Veiculo veiculoCadastrado = veiculoService.cadastrar(veiculo);
 
         return veiculoAssembler.toModel(veiculoCadastrado);
     }
 
+    @PutMapping("/{veiculoId}/apreensao")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void apreender(@PathVariable Long veiculoId){
+        apreensaoService.apreender(veiculoId);
+    }
+
+    @DeleteMapping("/{veiculoId}/apreensao")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removerApreensao(@PathVariable Long veiculoId){
+        apreensaoService.removerApreensao(veiculoId);
+    }
 }

@@ -17,6 +17,7 @@ public class ApreensaoVeiculoService {
         veiculo.apreender();
     }
 
+    @Transactional
     public void removerApreensao(Long veiculoId){
         Veiculo veiculo = registroVeiculoService.buscar(veiculoId);
         veiculo.removerApreensao();
